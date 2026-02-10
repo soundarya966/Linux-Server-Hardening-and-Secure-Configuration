@@ -1,0 +1,90 @@
+==============================
+Linux Server Hardening Commands
+==============================
+
+STEP 1 — SYSTEM INFORMATION
+---------------------------
+whoami
+uname -a
+hostnamectl
+cat /etc/os-release
+
+STEP 2 — REVIEW USERS
+---------------------
+cat /etc/passwd
+cut -d: -f1 /etc/passwd
+sudo cat /etc/shadow
+
+STEP 3 — CHECK RUNNING SERVICES
+-------------------------------
+sudo systemctl list-units --type=service
+systemctl list-units --type=service --state=running
+
+STEP 4 — CHECK OPEN PORTS
+--------------------------
+ss -tuln
+sudo netstat -tulnp
+
+STEP 5 — REMOVE UNUSED USER (example)
+-------------------------------------
+sudo deluser testuser
+
+STEP 6 — CHECK SUDO ACCESS
+--------------------------
+getent group sudo
+sudo visudo
+
+STEP 7 — SSH HARDENING
+----------------------
+sudo nano /etc/ssh/sshd_config
+
+# Change the following values inside the file:
+PermitRootLogin no
+PasswordAuthentication no
+
+sudo systemctl restart ssh
+
+STEP 8 — SSH KEY AUTHENTICATION
+-------------------------------
+ssh-keygen
+ssh-copy-id user@localhost
+
+STEP 9 — SYSTEM UPDATES
+-----------------------
+sudo apt update
+sudo apt upgrade -y
+
+STEP 10 — ENABLE AUTO SECURITY UPDATES
+--------------------------------------
+sudo apt install unattended-upgrades -y
+sudo dpkg-reconfigure unattended-upgrades
+
+STEP 11 — FIREWALL CONFIGURATION
+--------------------------------
+sudo ufw enable
+sudo ufw allow OpenSSH
+sudo ufw status verbose
+
+STEP 12 — DISABLE UNUSED SERVICES (example)
+-------------------------------------------
+sudo systemctl stop apache2
+sudo systemctl disable apache2
+
+STEP 13 — FILE PERMISSION HARDENING
+-----------------------------------
+sudo chmod 600 /etc/shadow
+sudo chmod 644 /etc/passwd
+
+STEP 14 — LOG MONITORING
+------------------------
+sudo journalctl -p 3 -xb
+sudo tail -f /var/log/auth.log
+
+STEP 15 — SECURITY AUDIT (optional but recommended)
+---------------------------------------------------
+sudo apt install lynis -y
+sudo lynis audit system
+
+==============================
+END OF COMMANDS
+==============================
